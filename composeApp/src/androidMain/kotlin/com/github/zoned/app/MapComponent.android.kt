@@ -50,23 +50,35 @@ fun themeJson(colorScheme: ColorScheme): MapStyleOptions {
     val json = """
     [
       {
-        "featureType": "all",
         "elementType": "geometry",
-        "stylers": [ { "color": "${colorScheme.surface.toMapHex()}" } ]
+        "stylers": [ { "color": "${colorScheme.surfaceContainer.toMapHex()}" } ]
+      },
+      {
+        "elementType": "labels.icon",
+        "stylers": [ { "visibility": "off" } ]
+      },
+      {
+        "elementType": "labels.text.fill",
+        "stylers": [ { "color": "${colorScheme.onSurfaceVariant.toMapHex()}" } ]
+      },
+      {
+        "elementType": "labels.text.stroke",
+        "stylers": [ { "color": "${colorScheme.surfaceContainer.toMapHex()}" } ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [ { "color": "${colorScheme.surfaceContainerLow.toMapHex()}" } ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [ { "color": "${colorScheme.surfaceContainerHigh.toMapHex()}" } ]
       },
       {
         "featureType": "water",
         "elementType": "geometry",
-        "stylers": [ { "color": "${colorScheme.primaryContainer.toMapHex()}" } ]
-      },
-      {
-        "featureType": "road",
-        "elementType": "geometry",
-        "stylers": [ { "color": "${colorScheme.surfaceVariant.toMapHex()}" } ]
-      },
-      {
-        "elementType": "labels.text.fill",
-        "stylers": [ { "color": "${colorScheme.onSurface.toMapHex()}" } ]
+        "stylers": [ { "color": "${colorScheme.secondaryContainer.toMapHex()}" } ]
       }
     ]
     """.trimIndent()
