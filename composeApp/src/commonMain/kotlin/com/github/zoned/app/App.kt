@@ -3,6 +3,7 @@ package com.github.zoned.app
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.github.zoned.app.screens.Home
 
 @Composable
 @Preview

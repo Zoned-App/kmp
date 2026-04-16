@@ -1,20 +1,27 @@
-package com.github.zoned.app
+package com.github.zoned.app.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.zoned.app.Logo
+import com.github.zoned.app.data.Game
+import com.github.zoned.app.data.Quest
+import com.github.zoned.app.data.games
+import com.github.zoned.app.data.quests
+import com.github.zoned.app.MapView
 
 @Composable
 fun Home() {
@@ -28,6 +35,16 @@ fun Home() {
                 item { Text("Nearby Games", style = MaterialTheme.typography.titleLarge) }
                 items(games.size) { game ->
                     ActiveGame(games[game])
+                }
+                item {
+                    Text(
+                        "Quests",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+                items(quests.size) { quest ->
+                    QuestItemCard(quests[quest])
                 }
             }
         }
@@ -54,7 +71,7 @@ fun Header() {
 @Composable
 fun JoinGame() {
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp)
+        modifier = Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
     ) {
         Column(
             modifier = Modifier
@@ -68,19 +85,13 @@ fun JoinGame() {
     }
 }
 
-val games = listOf(
-    Game("Central Park", "neeleshpoli", 40.78280644117304, -73.96557470937626),
-    Game("Frisco Commons", "aarush49", 33.15567735480183, -96.8144192461819),
-    Game("UTD", "MRBLACKLUFFY", 32.98802776982712, -96.75100654430815)
-)
-
 @Composable
 fun ActiveGame(game: Game) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
-            .clip(RoundedCornerShape(24.dp))
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
     ) {
         MapView(
             modifier = Modifier.fillMaxSize(), game.lat, game.lon
@@ -103,6 +114,24 @@ fun ActiveGame(game: Game) {
                 style = MaterialTheme.typography.headlineSmall
             )
             Text(game.host)
+        }
+    }
+}
+
+@Composable
+fun QuestItemCard(quest: Quest) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(quest.description, style = MaterialTheme.typography.bodyLarge)
+            Spacer(Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = { quest.progress },
+                modifier = Modifier.fillMaxWidth(),
+                strokeCap = StrokeCap.Round // Makes the progress bar look more "finished"
+            )
         }
     }
 }
