@@ -2,6 +2,7 @@ package com.github.zoned.app
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,18 +15,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.compose.resources.painterResource
-import zoned.composeapp.generated.resources.Res
-import zoned.composeapp.generated.resources.logo_colored
 
 @Composable
 fun Home() {
     Scaffold(topBar = { Header() }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                JoinGame()
-                Spacer(modifier = Modifier.height(16.dp))
-                NearbyGames()
+            LazyColumn(
+                modifier = Modifier.padding(PaddingValues(16.dp, 0.dp)),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item { JoinGame() }
+                item { Text("Nearby Games", style = MaterialTheme.typography.titleLarge) }
+                items(games.size) { game ->
+                    ActiveGame(games[game])
+                }
             }
         }
     }
@@ -47,22 +50,11 @@ fun Header() {
     )
 }
 
-@Composable
-fun Logo() {
-    Icon(
-        painter = painterResource(Res.drawable.logo_colored),
-        contentDescription = "Zoned Logo",
-        tint = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.size(50.dp)
-    )
-}
-
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun JoinGame() {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth(), shape = RoundedCornerShape(24.dp)
+        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp)
     ) {
         Column(
             modifier = Modifier
@@ -76,40 +68,41 @@ fun JoinGame() {
     }
 }
 
+val games = listOf(
+    Game("Central Park", "neeleshpoli", 40.78280644117304, -73.96557470937626),
+    Game("Frisco Commons", "aarush49", 33.15567735480183, -96.8144192461819),
+    Game("UTD", "MRBLACKLUFFY", 32.98802776982712, -96.75100654430815)
+)
+
 @Composable
-fun NearbyGames() {
-    Column {
-        Text("Nearby Games", style = MaterialTheme.typography.titleLarge)
-        Spacer(Modifier.height(8.dp))
+fun ActiveGame(game: Game) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+            .clip(RoundedCornerShape(24.dp))
+    ) {
+        MapView(
+            modifier = Modifier.fillMaxSize(), game.lat, game.lon
+        )
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(24.dp))
-        ) {
-            MapView(
-                modifier = Modifier
-                    .fillMaxSize(),
-                32.997690495963475,
-                -96.76083616157189
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            0f to MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
-                            0.75f to Color.Transparent
-                        )
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        0f to MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f), // Matches map base
+                        0.75f to Color.Transparent // Ends halfway for logo safety
                     )
-            )
+                )
+        )
+        Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                "Central Park",
+                game.location,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(16.dp)
+                style = MaterialTheme.typography.headlineSmall
             )
+            Text(game.host)
         }
     }
 }
