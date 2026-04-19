@@ -7,11 +7,9 @@ import com.github.zoned.app.screens.Home
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object HomeRoute : NavKey
+import com.github.zoned.app.screens.HomeRoute
+import com.github.zoned.app.screens.JoinGamePage
+import com.github.zoned.app.screens.JoinGamePageRoute
 
 @Composable
 @Preview
@@ -24,8 +22,9 @@ fun App() {
                 backStack = backStack,
             ) { route ->
                 when (route) {
-                    is HomeRoute -> NavEntry<NavKey>(HomeRoute) { Home() }
-                    else -> NavEntry<NavKey>(route) { Home() }
+                    is HomeRoute -> NavEntry(HomeRoute) { Home(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
+                    is JoinGamePageRoute -> NavEntry(JoinGamePageRoute) { JoinGamePage() }
+                    else -> NavEntry(route) { Home(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
                 }
             }
         }

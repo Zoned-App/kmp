@@ -16,22 +16,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation3.runtime.NavKey
 import com.github.zoned.app.Logo
 import com.github.zoned.app.data.Game
 import com.github.zoned.app.data.Quest
 import com.github.zoned.app.data.games
 import com.github.zoned.app.data.quests
 import com.github.zoned.app.MapView
+import kotlinx.serialization.Serializable
 
 @Composable
-fun Home() {
+fun Home(onGameJoin: () -> Unit) {
     Scaffold(topBar = { Header() }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             LazyColumn(
                 modifier = Modifier.padding(PaddingValues(16.dp, 0.dp)),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                item { JoinGame() }
+                item { JoinGame(onGameJoin) }
                 item { Text("Nearby Games", style = MaterialTheme.typography.titleLarge) }
                 items(games.size) { game ->
                     ActiveGame(games[game])
@@ -69,7 +71,7 @@ fun Header() {
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun JoinGame() {
+fun JoinGame(onGameJoin: () -> Unit) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
     ) {
@@ -80,7 +82,7 @@ fun JoinGame() {
         ) {
             Text("Ready to play?", style = MaterialTheme.typography.displaySmall)
             Spacer(Modifier.height(8.dp))
-            Button(onClick = {}) { Text(text = "Join Game", fontWeight = FontWeight.Bold, fontSize = 16.sp) }
+            Button(onClick = onGameJoin) { Text(text = "Join Game", fontWeight = FontWeight.Bold, fontSize = 16.sp) }
         }
     }
 }
@@ -135,3 +137,6 @@ fun QuestItemCard(quest: Quest) {
         }
     }
 }
+
+@Serializable
+data object HomeRoute : NavKey
