@@ -3,7 +3,6 @@ package com.github.zoned.app.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,12 +16,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavKey
-import com.github.zoned.app.Logo
 import com.github.zoned.app.data.Game
 import com.github.zoned.app.data.Quest
 import com.github.zoned.app.data.games
 import com.github.zoned.app.data.quests
 import com.github.zoned.app.MapView
+import com.github.zoned.app.components.Header
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -51,22 +50,6 @@ fun Home(onGameJoin: () -> Unit) {
             }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-@Composable
-fun Header() {
-    CenterAlignedTopAppBar(
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center
-            ) {
-                Logo()
-                Spacer(Modifier.width(8.dp))
-                Text("Zoned", style = MaterialTheme.typography.headlineLargeEmphasized)
-            }
-        }, modifier = Modifier.clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-    )
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
+import com.github.zoned.app.components.Header
 
 @Composable
 fun JoinGamePage() {
