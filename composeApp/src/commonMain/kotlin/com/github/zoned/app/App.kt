@@ -23,7 +23,7 @@ fun App() {
             ) { route ->
                 when (route) {
                     is HomeRoute -> NavEntry(HomeRoute) { Home(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
-                    is JoinGamePageRoute -> NavEntry(JoinGamePageRoute) { JoinGamePage() }
+                    is JoinGamePageRoute -> NavEntry(JoinGamePageRoute) { JoinGamePage(onBack = { backStack.removeLast() }) }
                     else -> NavEntry(route) { Home(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
                 }
             }
