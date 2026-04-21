@@ -25,7 +25,7 @@ import com.github.zoned.app.components.Header
 import kotlinx.serialization.Serializable
 
 @Composable
-fun Home(onGameJoin: () -> Unit) {
+fun HomePage(onGameJoin: () -> Unit) {
     Scaffold(topBar = { Header() }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             LazyColumn(

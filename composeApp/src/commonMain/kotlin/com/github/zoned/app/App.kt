@@ -3,7 +3,7 @@ package com.github.zoned.app
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.zoned.app.screens.Home
+import com.github.zoned.app.screens.HomePage
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -22,9 +22,9 @@ fun App() {
                 backStack = backStack,
             ) { route ->
                 when (route) {
-                    is HomeRoute -> NavEntry(HomeRoute) { Home(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
+                    is HomeRoute -> NavEntry(HomeRoute) { HomePage(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
                     is JoinGamePageRoute -> NavEntry(JoinGamePageRoute) { JoinGamePage(onBack = { backStack.removeLast() }) }
-                    else -> NavEntry(route) { Home(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
+                    else -> NavEntry(route) { HomePage(onGameJoin = { backStack.add(JoinGamePageRoute) }) }
                 }
             }
         }
