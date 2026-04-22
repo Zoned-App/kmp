@@ -3,6 +3,7 @@ package com.github.zoned.app.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,13 +26,23 @@ import com.github.zoned.app.components.Header
 import kotlinx.serialization.Serializable
 
 @Composable
-fun HomePage(onGameJoin: () -> Unit) {
+fun HomePage(
+    onGameJoin: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToSignUp: () -> Unit,
+    isLoggedIn: Boolean = false
+) {
     Scaffold(topBar = { Header() }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             LazyColumn(
                 modifier = Modifier.padding(PaddingValues(16.dp, 0.dp)),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                // Auth card — shown when user is not logged in
+                if (!isLoggedIn) {
+                    item { AuthCard(onNavigateToLogin, onNavigateToSignUp) }
+                }
+
                 item { JoinGame(onGameJoin) }
                 item { Text("Nearby Games", style = MaterialTheme.typography.titleLarge) }
                 items(games.size) { game ->
@@ -54,9 +65,54 @@ fun HomePage(onGameJoin: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
+fun AuthCard(
+    onNavigateToLogin: () -> Unit,
+    onNavigateToSignUp: () -> Unit
+) {
+    ElevatedCard(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Join the fun!", style = MaterialTheme.typography.displaySmall)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "Log in or create an account to get started",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(12.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = onNavigateToLogin,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Log In", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
+                OutlinedButton(
+                    onClick = onNavigateToSignUp,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = "Sign Up", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
 fun JoinGame(onGameJoin: () -> Unit) {
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
+        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp)
     ) {
         Column(
             modifier = Modifier
@@ -76,7 +132,7 @@ fun ActiveGame(game: Game) {
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
-            .clip(androidx.compose.foundation.shape.RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(24.dp))
     ) {
         MapView(
             modifier = Modifier.fillMaxSize(), game.lat, game.lon
@@ -86,8 +142,8 @@ fun ActiveGame(game: Game) {
                 .fillMaxSize()
                 .background(
                     brush = Brush.verticalGradient(
-                        0f to MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f), // Matches map base
-                        0.75f to Color.Transparent // Ends halfway for logo safety
+                        0f to MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f),
+                        0.75f to Color.Transparent
                     )
                 )
         )
@@ -107,7 +163,7 @@ fun ActiveGame(game: Game) {
 fun QuestItemCard(quest: Quest) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(quest.description, style = MaterialTheme.typography.bodyLarge)
@@ -115,7 +171,7 @@ fun QuestItemCard(quest: Quest) {
             LinearProgressIndicator(
                 progress = { quest.progress },
                 modifier = Modifier.fillMaxWidth(),
-                strokeCap = StrokeCap.Round // Makes the progress bar look more "finished"
+                strokeCap = StrokeCap.Round
             )
         }
     }
