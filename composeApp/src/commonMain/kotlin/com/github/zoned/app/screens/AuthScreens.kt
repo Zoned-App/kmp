@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -19,9 +18,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavKey
 import com.github.zoned.app.Back
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.painterResource
 import zoned.composeapp.generated.resources.Res
-//import zoned.composeapp.generated.resources.visibility_off_24px
-//import zoned.composeapp.generated.resources.visibilty_24px
+import zoned.composeapp.generated.resources.visibility_off_24px
+import zoned.composeapp.generated.resources.visibility_24px
 
 // ─────────────────────────────────────────────
 //  LOGIN PAGE
@@ -32,13 +32,26 @@ import zoned.composeapp.generated.resources.Res
 fun LoginPage(
     onBack: () -> Unit,
     onLoginSuccess: () -> Unit,
-    onNavigateToSignUp: () -> Unit
+    onNavigateToSignUp: () -> Unit,
+    // ViewModel-driven params
+    isLoading: Boolean = false,
+    error: String? = null,
+    onLogin: ((email: String, password: String) -> Unit)? = null,
+    onClearError: () -> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
     val isValid = email.isNotBlank() && password.length >= 6
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            snackbarHostState.showSnackbar(error)
+            onClearError()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -50,10 +63,11 @@ fun LoginPage(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Back() }
+                    IconButton(onClick = onBack, enabled = !isLoading) { Back() }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -97,6 +111,7 @@ fun LoginPage(
                         onValueChange = { email = it },
                         label = { Text("Email") },
                         singleLine = true,
+                        enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(
@@ -112,6 +127,7 @@ fun LoginPage(
                         onValueChange = { password = it },
                         label = { Text("Password") },
                         singleLine = true,
+                        enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         visualTransformation = if (passwordVisible)
@@ -123,33 +139,44 @@ fun LoginPage(
                             imeAction = ImeAction.Done
                         ),
                         trailingIcon = {
-//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-//                                Icon(
-//                                    imageVector = if (passwordVisible)
-//                                        Icons.Default.VisibilityOff
-//                                    else
-//                                        Icons.Default.Visibility,
-//                                    contentDescription = if (passwordVisible)
-//                                        "Hide password"
-//                                    else
-//                                        "Show password"
-//                                )
-//                            }
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    painter = if (passwordVisible)
+                                        painterResource(Res.drawable.visibility_off_24px)
+                                    else
+                                        painterResource(Res.drawable.visibility_24px),
+                                    contentDescription = if (passwordVisible)
+                                        "Hide password"
+                                    else
+                                        "Show password"
+                                )
+                            }
                         }
                     )
                 }
 
                 item {
                     Button(
-                        onClick = onLoginSuccess,
-                        enabled = isValid,
+                        onClick = {
+                            if (onLogin != null) onLogin(email, password)
+                            else onLoginSuccess()
+                        },
+                        enabled = isValid && !isLoading,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Log In",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(
+                                text = "Log In",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
                     }
                 }
 
@@ -163,7 +190,7 @@ fun LoginPage(
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        TextButton(onClick = onNavigateToSignUp) {
+                        TextButton(onClick = onNavigateToSignUp, enabled = !isLoading) {
                             Text(
                                 "Sign Up",
                                 fontWeight = FontWeight.Bold
@@ -185,7 +212,12 @@ fun LoginPage(
 fun SignUpPage(
     onBack: () -> Unit,
     onSignUpSuccess: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    // ViewModel-driven params
+    isLoading: Boolean = false,
+    error: String? = null,
+    onSignUp: ((username: String, email: String, password: String) -> Unit)? = null,
+    onClearError: () -> Unit = {}
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -200,6 +232,15 @@ fun SignUpPage(
             && password.length >= 6
             && passwordsMatch
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            snackbarHostState.showSnackbar(error)
+            onClearError()
+        }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -210,10 +251,11 @@ fun SignUpPage(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Back() }
+                    IconButton(onClick = onBack, enabled = !isLoading) { Back() }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -257,6 +299,7 @@ fun SignUpPage(
                         onValueChange = { username = it },
                         label = { Text("Username") },
                         singleLine = true,
+                        enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(
@@ -272,6 +315,7 @@ fun SignUpPage(
                         onValueChange = { email = it },
                         label = { Text("Email") },
                         singleLine = true,
+                        enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(
@@ -287,6 +331,7 @@ fun SignUpPage(
                         onValueChange = { password = it },
                         label = { Text("Password") },
                         singleLine = true,
+                        enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         visualTransformation = if (passwordVisible)
@@ -298,18 +343,18 @@ fun SignUpPage(
                             imeAction = ImeAction.Next
                         ),
                         trailingIcon = {
-//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-//                                Icon(
-//                                    imageVector = if (passwordVisible)
-//                                        Icons.Default.VisibilityOff
-//                                    else
-//                                        Icons.Default.Visibility,
-//                                    contentDescription = if (passwordVisible)
-//                                        "Hide password"
-//                                    else
-//                                        "Show password"
-//                                )
-//                            }
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    painter = if (passwordVisible)
+                                        painterResource(Res.drawable.visibility_off_24px)
+                                    else
+                                        painterResource(Res.drawable.visibility_24px),
+                                    contentDescription = if (passwordVisible)
+                                        "Hide password"
+                                    else
+                                        "Show password"
+                                )
+                            }
                         },
                         supportingText = {
                             if (password.isNotEmpty() && password.length < 6) {
@@ -328,6 +373,7 @@ fun SignUpPage(
                         onValueChange = { confirmPassword = it },
                         label = { Text("Confirm Password") },
                         singleLine = true,
+                        enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         visualTransformation = if (confirmPasswordVisible)
@@ -339,18 +385,18 @@ fun SignUpPage(
                             imeAction = ImeAction.Done
                         ),
                         trailingIcon = {
-//                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-//                                Icon(
-//                                    painter = if (confirmPasswordVisible)
-//                                        painterResource(Res.drawable.visibility_off_24px)
-//                                    else
-//                                        painterResource(Res.drawable.visibility_24px),
-//                                    contentDescription = if (confirmPasswordVisible)
-//                                        "Hide password"
-//                                    else
-//                                        "Show password"
-//                                )
-//                            }
+                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                Icon(
+                                    painter = if (confirmPasswordVisible)
+                                        painterResource(Res.drawable.visibility_off_24px)
+                                    else
+                                        painterResource(Res.drawable.visibility_24px),
+                                    contentDescription = if (confirmPasswordVisible)
+                                        "Hide password"
+                                    else
+                                        "Show password"
+                                )
+                            }
                         },
                         isError = confirmPassword.isNotEmpty() && !passwordsMatch,
                         supportingText = {
@@ -366,15 +412,26 @@ fun SignUpPage(
 
                 item {
                     Button(
-                        onClick = onSignUpSuccess,
-                        enabled = isValid,
+                        onClick = {
+                            if (onSignUp != null) onSignUp(username, email, password)
+                            else onSignUpSuccess()
+                        },
+                        enabled = isValid && !isLoading,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Create Account",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                        } else {
+                            Text(
+                                text = "Create Account",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp
+                            )
+                        }
                     }
                 }
 
@@ -388,7 +445,7 @@ fun SignUpPage(
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        TextButton(onClick = onNavigateToLogin) {
+                        TextButton(onClick = onNavigateToLogin, enabled = !isLoading) {
                             Text(
                                 "Log In",
                                 fontWeight = FontWeight.Bold
