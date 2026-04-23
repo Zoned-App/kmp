@@ -35,6 +35,12 @@ kotlin {
             implementation(libs.maps.compose)
         }
         commonMain.dependencies {
+            implementation("io.ktor:ktor-client-core:2.3.12")
+            implementation("io.ktor:ktor-client-cio:2.3.12")          // Android engine
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+            implementation("io.ktor:ktor-client-logging:2.3.12")
+            implementation("androidx.datastore:datastore-preferences:1.1.1")
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
