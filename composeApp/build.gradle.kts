@@ -44,7 +44,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation("androidx.compose.ui:ui-text-google-fonts:1.10.6")
+            implementation("androidx.compose.ui:ui-text-google-fonts:1.11.0")
 
         }
         commonTest.dependencies {
