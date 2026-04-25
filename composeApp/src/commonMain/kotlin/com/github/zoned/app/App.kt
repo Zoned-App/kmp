@@ -12,15 +12,9 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.github.zoned.app.data.auth.AuthRepository
 import com.github.zoned.app.data.auth.TokenStore
-import com.github.zoned.app.screens.AuthViewModel
-import com.github.zoned.app.screens.HomePage
-import com.github.zoned.app.screens.HomeRoute
-import com.github.zoned.app.screens.JoinGamePage
-import com.github.zoned.app.screens.JoinGamePageRoute
-import com.github.zoned.app.screens.LoginPage
-import com.github.zoned.app.screens.LoginRoute
-import com.github.zoned.app.screens.SignUpPage
-import com.github.zoned.app.screens.SignUpRoute
+import com.github.zoned.app.logic.PlatformLocation
+import com.github.zoned.app.logic.PlatformNotifications
+import com.github.zoned.app.screens.*
 
 @Composable
 @Preview
@@ -49,24 +43,24 @@ fun App() {
                     }
 
                     is JoinGamePageRoute -> NavEntry(JoinGamePageRoute) {
-                        JoinGamePage(onBack = { backStack.removeLast() })
+                        JoinGamePage(onBack = { backStack.removeAt(backStack.lastIndex) })
                     }
 
                     is LoginRoute -> NavEntry(LoginRoute) {
                         LoginPage(
-                            onBack = { backStack.removeLast() },
+                            onBack = { backStack.removeAt(backStack.lastIndex) },
                             onLoginSuccess = {
-                                while (backStack.size > 1) backStack.removeLast()
+                                while (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
                             },
                             onNavigateToSignUp = {
-                                backStack.removeLast()
+                                backStack.removeAt(backStack.lastIndex)
                                 backStack.add(SignUpRoute)
                             },
                             isLoading = authState.isLoading,
                             error = authState.error,
                             onLogin = { email, password ->
                                 authViewModel.login(email, password) {
-                                    while (backStack.size > 1) backStack.removeLast()
+                                    while (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
                                 }
                             },
                             onClearError = authViewModel::clearError
@@ -75,19 +69,19 @@ fun App() {
 
                     is SignUpRoute -> NavEntry(SignUpRoute) {
                         SignUpPage(
-                            onBack = { backStack.removeLast() },
+                            onBack = { backStack.removeAt(backStack.lastIndex) },
                             onSignUpSuccess = {
-                                while (backStack.size > 1) backStack.removeLast()
+                                while (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
                             },
                             onNavigateToLogin = {
-                                backStack.removeLast()
+                                backStack.removeAt(backStack.lastIndex)
                                 backStack.add(LoginRoute)
                             },
                             isLoading = authState.isLoading,
                             error = authState.error,
                             onSignUp = { username, email, password ->
                                 authViewModel.signUp(username, email, password) {
-                                    while (backStack.size > 1) backStack.removeLast()
+                                    while (backStack.size > 1) backStack.removeAt(backStack.lastIndex)
                                 }
                             },
                             onClearError = authViewModel::clearError
@@ -106,4 +100,9 @@ fun App() {
             }
         }
     }
+}
+
+object Permissions {
+    lateinit var notifications: PlatformNotifications
+    lateinit var location: PlatformLocation
 }

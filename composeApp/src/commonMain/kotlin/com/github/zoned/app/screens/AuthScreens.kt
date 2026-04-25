@@ -18,10 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavKey
 import com.github.zoned.app.Back
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.painterResource
-import zoned.composeapp.generated.resources.Res
-import zoned.composeapp.generated.resources.visibility_off_24px
-import zoned.composeapp.generated.resources.visibility_24px
+
+//import zoned.composeapp.generated.resources.visibility_off_24px
+//import zoned.composeapp.generated.resources.visibility_24px
 
 // ─────────────────────────────────────────────
 //  LOGIN PAGE
@@ -139,18 +138,18 @@ fun LoginPage(
                             imeAction = ImeAction.Done
                         ),
                         trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    painter = if (passwordVisible)
-                                        painterResource(Res.drawable.visibility_off_24px)
-                                    else
-                                        painterResource(Res.drawable.visibility_24px),
-                                    contentDescription = if (passwordVisible)
-                                        "Hide password"
-                                    else
-                                        "Show password"
-                                )
-                            }
+//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+//                                Icon(
+//                                    painter = if (passwordVisible)
+//                                        painterResource(Res.drawable.visibility_off_24px)
+//                                    else
+//                                        painterResource(Res.drawable.visibility_24px),
+//                                    contentDescription = if (passwordVisible)
+//                                        "Hide password"
+//                                    else
+//                                        "Show password"
+//                                )
+//                            }
                         }
                     )
                 }
@@ -343,18 +342,18 @@ fun SignUpPage(
                             imeAction = ImeAction.Next
                         ),
                         trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    painter = if (passwordVisible)
-                                        painterResource(Res.drawable.visibility_off_24px)
-                                    else
-                                        painterResource(Res.drawable.visibility_24px),
-                                    contentDescription = if (passwordVisible)
-                                        "Hide password"
-                                    else
-                                        "Show password"
-                                )
-                            }
+//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+//                                Icon(
+//                                    painter = if (passwordVisible)
+//                                        painterResource(Res.drawable.visibility_off_24px)
+//                                    else
+//                                        painterResource(Res.drawable.visibility_24px),
+//                                    contentDescription = if (passwordVisible)
+//                                        "Hide password"
+//                                    else
+//                                        "Show password"
+//                                )
+//                            }
                         },
                         supportingText = {
                             if (password.isNotEmpty() && password.length < 6) {
@@ -385,18 +384,18 @@ fun SignUpPage(
                             imeAction = ImeAction.Done
                         ),
                         trailingIcon = {
-                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                                Icon(
-                                    painter = if (confirmPasswordVisible)
-                                        painterResource(Res.drawable.visibility_off_24px)
-                                    else
-                                        painterResource(Res.drawable.visibility_24px),
-                                    contentDescription = if (confirmPasswordVisible)
-                                        "Hide password"
-                                    else
-                                        "Show password"
-                                )
-                            }
+//                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+//                                Icon(
+//                                    painter = if (confirmPasswordVisible)
+//                                        painterResource(Res.drawable.visibility_off_24px)
+//                                    else
+//                                        painterResource(Res.drawable.visibility_24px),
+//                                    contentDescription = if (confirmPasswordVisible)
+//                                        "Hide password"
+//                                    else
+//                                        "Show password"
+//                                )
+//                            }
                         },
                         isError = confirmPassword.isNotEmpty() && !passwordsMatch,
                         supportingText = {

@@ -17,12 +17,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavKey
+import com.github.zoned.app.MapView
+import com.github.zoned.app.components.Header
 import com.github.zoned.app.data.Game
 import com.github.zoned.app.data.Quest
 import com.github.zoned.app.data.games
 import com.github.zoned.app.data.quests
-import com.github.zoned.app.MapView
-import com.github.zoned.app.components.Header
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -38,7 +38,6 @@ fun HomePage(
                 modifier = Modifier.padding(PaddingValues(16.dp, 0.dp)),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Auth card — shown when user is not logged in
                 if (!isLoggedIn) {
                     item { AuthCard(onNavigateToLogin, onNavigateToSignUp) }
                 }
