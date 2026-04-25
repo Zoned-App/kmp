@@ -13,10 +13,14 @@ import androidx.compose.ui.unit.dp
 fun LobbyPage() {
     Scaffold(topBar = { CenterAlignedTopAppBar(title = { Text("Lobby Page") }) }) { paddingValues ->
         LazyColumn(contentPadding = paddingValues) {
-            item { OutlinedCard { Column(modifier = Modifier.padding(16.dp)) {
-                Text("Game Code:")
-                Text("TestCode")
-            } } }
+            item {
+                OutlinedCard {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text("Game Code:")
+                        Text("TestCode")
+                    }
+                }
+            }
         }
     }
 }

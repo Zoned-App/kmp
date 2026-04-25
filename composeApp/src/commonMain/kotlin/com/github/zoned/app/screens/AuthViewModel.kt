@@ -7,11 +7,7 @@ import com.github.zoned.app.data.auth.AuthRepository
 import com.github.zoned.app.data.auth.AuthResult
 import com.github.zoned.app.data.auth.TokenStore
 import com.github.zoned.app.data.auth.UserDto
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 // ─────────────────────────────────────────────
@@ -55,6 +51,7 @@ class AuthViewModel(
                     _state.update { it.copy(isLoggedIn = true, user = result.data, isLoading = false) }
                     onSuccess()
                 }
+
                 is AuthResult.Error -> {
                     _state.update { it.copy(isLoading = false, error = result.message) }
                 }
@@ -70,6 +67,7 @@ class AuthViewModel(
                     _state.update { it.copy(isLoggedIn = true, user = result.data, isLoading = false) }
                     onSuccess()
                 }
+
                 is AuthResult.Error -> {
                     _state.update { it.copy(isLoading = false, error = result.message) }
                 }

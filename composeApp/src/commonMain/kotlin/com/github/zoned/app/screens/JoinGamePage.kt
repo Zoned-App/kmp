@@ -236,11 +236,15 @@ fun PermissionCard(
                         Text("FIX")
                     }
                 }
+
                 PermissionStatus.Allowed -> {
                     Icon(
-                        painter = painterResource(Res.drawable.check_24px), contentDescription = "Ready", tint = statusColor
+                        painter = painterResource(Res.drawable.check_24px),
+                        contentDescription = "Ready",
+                        tint = statusColor
                     )
                 }
+
                 PermissionStatus.Checking -> {
                     CircularProgressIndicator()
                 }
