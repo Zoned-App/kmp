@@ -28,6 +28,7 @@ import com.github.zoned.app.Back
 import com.github.zoned.app.Permissions
 import com.github.zoned.app.data.PermissionStatus
 import kotlinx.coroutines.delay
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import zoned.composeapp.generated.resources.Res
@@ -38,7 +39,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun JoinGamePage(onBack: () -> Unit) {
+fun JoinGamePage(onBack: () -> Unit, onJoin: () -> Unit) {
     val codeFieldState = rememberTextFieldState()
     val validCode = codeFieldState.text.length == 6
 
@@ -50,9 +51,7 @@ fun JoinGamePage(onBack: () -> Unit) {
         }, navigationIcon = { IconButton(onClick = onBack) { Back() } })
     }) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues), contentAlignment = Alignment.TopCenter
+            modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.TopCenter
         ) {
             Column(
                 modifier = Modifier.padding(PaddingValues(16.dp, 0.dp)),
@@ -63,9 +62,9 @@ fun JoinGamePage(onBack: () -> Unit) {
                     "Enter game code:", style = MaterialTheme.typography.titleMedium,
                 )
                 CodeInput(state = codeFieldState)
-                GameReadiness(onContinue = {})
+                GameReadiness(validCode, onContinue = onJoin)
                 Button(
-                    onClick = {}, enabled = validCode, modifier = Modifier.fillMaxWidth()
+                    onClick = onJoin, enabled = validCode, modifier = Modifier.fillMaxWidth()
                 ) { Text("Join Game") }
             }
         }
@@ -126,9 +125,7 @@ fun CodeBox(char: String, isFocused: Boolean) {
     else MaterialTheme.colorScheme.outlineVariant
 
     Box(
-        modifier = Modifier
-            .size(width = 48.dp, height = 56.dp)
-            .border(2.dp, borderColor, RoundedCornerShape(12.dp))
+        modifier = Modifier.size(width = 48.dp, height = 56.dp).border(2.dp, borderColor, RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center
     ) {
@@ -139,7 +136,7 @@ fun CodeBox(char: String, isFocused: Boolean) {
 }
 
 @Composable
-fun GameReadiness(onContinue: () -> Unit) {
+fun GameReadiness(validCode: Boolean, onContinue: () -> Unit) {
     val notificationStatus by Permissions.notifications.permissionStatus.collectAsState()
     val locationStatus by Permissions.location.permissionStatus.collectAsState()
 
@@ -184,10 +181,8 @@ fun GameReadiness(onContinue: () -> Unit) {
         // --- BOTTOM ACTION ---
         Button(
             onClick = onContinue,
-            enabled = notificationStatus == PermissionStatus.Allowed && locationStatus == PermissionStatus.Allowed,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
+            enabled = notificationStatus == PermissionStatus.Allowed && locationStatus == PermissionStatus.Allowed && validCode,
+            modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text("Enter Lobby", style = MaterialTheme.typography.titleMedium)
@@ -222,9 +217,7 @@ fun PermissionCard(
             )
 
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
             ) {
                 Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Text(description, style = MaterialTheme.typography.bodySmall)
@@ -253,4 +246,5 @@ fun PermissionCard(
     }
 }
 
+@Serializable
 data object JoinGamePageRoute : NavKey

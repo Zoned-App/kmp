@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,7 +44,19 @@ fun App() {
                     }
 
                     is JoinGamePageRoute -> NavEntry(JoinGamePageRoute) {
-                        JoinGamePage(onBack = { backStack.removeAt(backStack.lastIndex) })
+                        JoinGamePage(
+                            onBack = { backStack.removeAt(backStack.lastIndex) },
+                            onJoin = {
+                                Snapshot.withMutableSnapshot {
+                                    backStack.clear()
+                                    backStack.add(LobbyPageRoute)
+                                }
+                            }
+                        )
+                    }
+
+                    is LobbyPageRoute -> NavEntry(LobbyPageRoute) {
+                        LobbyPage(onExitGame = { backStack.removeAt(backStack.lastIndex) })
                     }
 
                     is LoginRoute -> NavEntry(LoginRoute) {

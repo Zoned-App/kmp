@@ -9,3 +9,17 @@ val quests = listOf(
     Quest("Stay in a hiding spot for 5 minutes", 0.31428f),
     Quest("Find 5 hiders", 0.6f),
 )
+
+data class LobbyDetails(
+    val code: String,
+    val host: String,
+    val location: String,
+    val players: List<String>
+)
+
+val testLobbyDetails = LobbyDetails(
+    code = "XYZ123",
+    host = "neeleshpoli",
+    location = "Central Park",
+    players = listOf("neeleshpoli", "aarush49", "MRBLACKLUFFY", "player4", "hider123")
+)
