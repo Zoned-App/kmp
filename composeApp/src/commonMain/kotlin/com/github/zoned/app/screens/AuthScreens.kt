@@ -18,9 +18,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavKey
 import com.github.zoned.app.Back
 import kotlinx.serialization.Serializable
-
-//import zoned.composeapp.generated.resources.visibility_off_24px
-//import zoned.composeapp.generated.resources.visibility_24px
+import org.jetbrains.compose.resources.painterResource
+import zoned.composeapp.generated.resources.Res
+import zoned.composeapp.generated.resources.visibility_off_24px
+import zoned.composeapp.generated.resources.visibility_24px
 
 // ─────────────────────────────────────────────
 //  LOGIN PAGE
@@ -32,7 +33,6 @@ fun LoginPage(
     onBack: () -> Unit,
     onLoginSuccess: () -> Unit,
     onNavigateToSignUp: () -> Unit,
-    // ViewModel-driven params
     isLoading: Boolean = false,
     error: String? = null,
     onLogin: ((email: String, password: String) -> Unit)? = null,
@@ -56,10 +56,7 @@ fun LoginPage(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        "Log In",
-                        style = MaterialTheme.typography.headlineLargeEmphasized
-                    )
+                    Text("Log In", style = MaterialTheme.typography.headlineLargeEmphasized)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack, enabled = !isLoading) { Back() }
@@ -69,9 +66,7 @@ fun LoginPage(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
@@ -85,15 +80,10 @@ fun LoginPage(
                         shape = RoundedCornerShape(24.dp)
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
+                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                "Welcome back!",
-                                style = MaterialTheme.typography.displaySmall
-                            )
+                            Text("Welcome back!", style = MaterialTheme.typography.displaySmall)
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 "Sign in to continue playing",
@@ -138,18 +128,18 @@ fun LoginPage(
                             imeAction = ImeAction.Done
                         ),
                         trailingIcon = {
-//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-//                                Icon(
-//                                    painter = if (passwordVisible)
-//                                        painterResource(Res.drawable.visibility_off_24px)
-//                                    else
-//                                        painterResource(Res.drawable.visibility_24px),
-//                                    contentDescription = if (passwordVisible)
-//                                        "Hide password"
-//                                    else
-//                                        "Show password"
-//                                )
-//                            }
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    painter = if (passwordVisible)
+                                        painterResource(Res.drawable.visibility_off_24px)
+                                    else
+                                        painterResource(Res.drawable.visibility_24px),
+                                    contentDescription = if (passwordVisible)
+                                        "Hide password"
+                                    else
+                                        "Show password"
+                                )
+                            }
                         }
                     )
                 }
@@ -170,11 +160,7 @@ fun LoginPage(
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                         } else {
-                            Text(
-                                text = "Log In",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
-                            )
+                            Text(text = "Log In", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
@@ -190,10 +176,7 @@ fun LoginPage(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         TextButton(onClick = onNavigateToSignUp, enabled = !isLoading) {
-                            Text(
-                                "Sign Up",
-                                fontWeight = FontWeight.Bold
-                            )
+                            Text("Sign Up", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -212,7 +195,6 @@ fun SignUpPage(
     onBack: () -> Unit,
     onSignUpSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    // ViewModel-driven params
     isLoading: Boolean = false,
     error: String? = null,
     onSignUp: ((username: String, email: String, password: String) -> Unit)? = null,
@@ -244,10 +226,7 @@ fun SignUpPage(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        "Sign Up",
-                        style = MaterialTheme.typography.headlineLargeEmphasized
-                    )
+                    Text("Sign Up", style = MaterialTheme.typography.headlineLargeEmphasized)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack, enabled = !isLoading) { Back() }
@@ -257,9 +236,7 @@ fun SignUpPage(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
@@ -273,15 +250,10 @@ fun SignUpPage(
                         shape = RoundedCornerShape(24.dp)
                     ) {
                         Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
+                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(
-                                "Create account",
-                                style = MaterialTheme.typography.displaySmall
-                            )
+                            Text("Create account", style = MaterialTheme.typography.displaySmall)
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 "Join the game today",
@@ -342,25 +314,22 @@ fun SignUpPage(
                             imeAction = ImeAction.Next
                         ),
                         trailingIcon = {
-//                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-//                                Icon(
-//                                    painter = if (passwordVisible)
-//                                        painterResource(Res.drawable.visibility_off_24px)
-//                                    else
-//                                        painterResource(Res.drawable.visibility_24px),
-//                                    contentDescription = if (passwordVisible)
-//                                        "Hide password"
-//                                    else
-//                                        "Show password"
-//                                )
-//                            }
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    painter = if (passwordVisible)
+                                        painterResource(Res.drawable.visibility_off_24px)
+                                    else
+                                        painterResource(Res.drawable.visibility_24px),
+                                    contentDescription = if (passwordVisible)
+                                        "Hide password"
+                                    else
+                                        "Show password"
+                                )
+                            }
                         },
                         supportingText = {
                             if (password.isNotEmpty() && password.length < 6) {
-                                Text(
-                                    "At least 6 characters",
-                                    color = MaterialTheme.colorScheme.error
-                                )
+                                Text("At least 6 characters", color = MaterialTheme.colorScheme.error)
                             }
                         }
                     )
@@ -384,26 +353,23 @@ fun SignUpPage(
                             imeAction = ImeAction.Done
                         ),
                         trailingIcon = {
-//                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-//                                Icon(
-//                                    painter = if (confirmPasswordVisible)
-//                                        painterResource(Res.drawable.visibility_off_24px)
-//                                    else
-//                                        painterResource(Res.drawable.visibility_24px),
-//                                    contentDescription = if (confirmPasswordVisible)
-//                                        "Hide password"
-//                                    else
-//                                        "Show password"
-//                                )
-//                            }
+                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                Icon(
+                                    painter = if (confirmPasswordVisible)
+                                        painterResource(Res.drawable.visibility_off_24px)
+                                    else
+                                        painterResource(Res.drawable.visibility_24px),
+                                    contentDescription = if (confirmPasswordVisible)
+                                        "Hide password"
+                                    else
+                                        "Show password"
+                                )
+                            }
                         },
                         isError = confirmPassword.isNotEmpty() && !passwordsMatch,
                         supportingText = {
                             if (confirmPassword.isNotEmpty() && !passwordsMatch) {
-                                Text(
-                                    "Passwords don't match",
-                                    color = MaterialTheme.colorScheme.error
-                                )
+                                Text("Passwords don't match", color = MaterialTheme.colorScheme.error)
                             }
                         }
                     )
@@ -425,11 +391,7 @@ fun SignUpPage(
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                         } else {
-                            Text(
-                                text = "Create Account",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
-                            )
+                            Text(text = "Create Account", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
@@ -445,10 +407,7 @@ fun SignUpPage(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         TextButton(onClick = onNavigateToLogin, enabled = !isLoading) {
-                            Text(
-                                "Log In",
-                                fontWeight = FontWeight.Bold
-                            )
+                            Text("Log In", fontWeight = FontWeight.Bold)
                         }
                     }
                 }
