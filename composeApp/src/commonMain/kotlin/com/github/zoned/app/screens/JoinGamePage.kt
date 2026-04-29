@@ -39,7 +39,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun JoinGamePage(onBack: () -> Unit, onJoin: () -> Unit) {
+fun JoinGamePage(onBack: () -> Unit, onJoin: (String) -> Unit) {
     val codeFieldState = rememberTextFieldState()
     val validCode = codeFieldState.text.length == 6
 
@@ -51,7 +51,10 @@ fun JoinGamePage(onBack: () -> Unit, onJoin: () -> Unit) {
         }, navigationIcon = { IconButton(onClick = onBack) { Back() } })
     }) { paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.TopCenter
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
         ) {
             Column(
                 modifier = Modifier.padding(PaddingValues(16.dp, 0.dp)),
@@ -62,9 +65,14 @@ fun JoinGamePage(onBack: () -> Unit, onJoin: () -> Unit) {
                     "Enter game code:", style = MaterialTheme.typography.titleMedium,
                 )
                 CodeInput(state = codeFieldState)
-                GameReadiness(validCode, onContinue = onJoin)
+                GameReadiness(
+                    validCode = validCode,
+                    onContinue = { onJoin(codeFieldState.text.toString()) }
+                )
                 Button(
-                    onClick = onJoin, enabled = validCode, modifier = Modifier.fillMaxWidth()
+                    onClick = { onJoin(codeFieldState.text.toString()) },
+                    enabled = validCode,
+                    modifier = Modifier.fillMaxWidth()
                 ) { Text("Join Game") }
             }
         }
@@ -100,13 +108,21 @@ fun CodeInput(state: TextFieldState) {
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Go
         ),
-        inputTransformation = InputTransformation.maxLength(codeLen).then(InputTransformation.allCaps(Locale.current)),
+        inputTransformation = InputTransformation.maxLength(codeLen)
+            .then(InputTransformation.allCaps(Locale.current))
+            .then(InputTransformation {
+                val filtered = asCharSequence().filter { it != ' ' }
+                if (filtered.length != length) {
+                    replace(0, length, filtered)
+                }
+            }),
         lineLimits = TextFieldLineLimits.SingleLine,
         decorator = {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 repeat(codeLen) { index ->
                     CodeBox(
-                        char = state.text.getOrNull(index)?.toString() ?: "", state.text.length == index
+                        char = state.text.getOrNull(index)?.toString() ?: "",
+                        isFocused = state.text.length == index
                     )
                 }
             }
@@ -116,7 +132,8 @@ fun CodeInput(state: TextFieldState) {
                 keyboardController?.hide()
                 localFocusManager.clearFocus()
             }
-        })
+        }
+    )
 }
 
 @Composable
@@ -125,12 +142,16 @@ fun CodeBox(char: String, isFocused: Boolean) {
     else MaterialTheme.colorScheme.outlineVariant
 
     Box(
-        modifier = Modifier.size(width = 48.dp, height = 56.dp).border(2.dp, borderColor, RoundedCornerShape(12.dp))
+        modifier = Modifier
+            .size(width = 48.dp, height = 56.dp)
+            .border(2.dp, borderColor, RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = char, style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onSurface
+            text = char,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -146,10 +167,13 @@ fun GameReadiness(validCode: Boolean, onContinue: () -> Unit) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "Game Readiness", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold
+            "Game Readiness",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
         )
         Text(
             "Ensure your device is ready to join the zone.",
@@ -165,7 +189,8 @@ fun GameReadiness(validCode: Boolean, onContinue: () -> Unit) {
             description = "Required for live game updates while your phone is in your pocket.",
             status = notificationStatus,
             icon = Res.drawable.notifications_active_24px,
-            onRequest = { Permissions.notifications.requestPermission() })
+            onRequest = { Permissions.notifications.requestPermission() }
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -174,15 +199,19 @@ fun GameReadiness(validCode: Boolean, onContinue: () -> Unit) {
             description = "Used to track zone boundaries and interactive features.",
             status = locationStatus,
             icon = Res.drawable.location_on_24px,
-            onRequest = { Permissions.location.requestPermission() })
+            onRequest = { Permissions.location.requestPermission() }
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // --- BOTTOM ACTION ---
         Button(
             onClick = onContinue,
-            enabled = notificationStatus == PermissionStatus.Allowed && locationStatus == PermissionStatus.Allowed && validCode,
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            enabled = notificationStatus == PermissionStatus.Allowed
+                    && locationStatus == PermissionStatus.Allowed
+                    && validCode,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text("Enter Lobby", style = MaterialTheme.typography.titleMedium)
@@ -193,7 +222,11 @@ fun GameReadiness(validCode: Boolean, onContinue: () -> Unit) {
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionCard(
-    title: String, description: String, status: PermissionStatus, icon: DrawableResource, onRequest: () -> Unit
+    title: String,
+    description: String,
+    status: PermissionStatus,
+    icon: DrawableResource,
+    onRequest: () -> Unit
 ) {
     val statusColor = when (status) {
         PermissionStatus.Allowed -> Color(0xFF4CAF50)
@@ -202,12 +235,15 @@ fun PermissionCard(
     }
 
     Card(
-        modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         )
     ) {
         Row(
-            modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(icon),
@@ -217,7 +253,9 @@ fun PermissionCard(
             )
 
             Column(
-                modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Text(description, style = MaterialTheme.typography.bodySmall)
@@ -229,7 +267,6 @@ fun PermissionCard(
                         Text("FIX")
                     }
                 }
-
                 PermissionStatus.Allowed -> {
                     Icon(
                         painter = painterResource(Res.drawable.check_24px),
@@ -237,7 +274,6 @@ fun PermissionCard(
                         tint = statusColor
                     )
                 }
-
                 PermissionStatus.Checking -> {
                     CircularProgressIndicator()
                 }
