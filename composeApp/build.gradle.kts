@@ -35,12 +35,12 @@ kotlin {
             implementation(libs.maps.compose)
         }
         commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:2.3.12")
-            implementation("io.ktor:ktor-client-cio:2.3.12")          // Android engine
-            implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
-            implementation("io.ktor:ktor-client-logging:2.3.12")
-            implementation("androidx.datastore:datastore-preferences:1.1.1")
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.json)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.androidx.datastore.preferences)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -50,7 +50,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation("androidx.compose.ui:ui-text-google-fonts:1.11.0")
+            implementation(libs.androidx.compose.ui.text.google.fonts)
             implementation(libs.zoned.proto)
         }
         commonTest.dependencies {
