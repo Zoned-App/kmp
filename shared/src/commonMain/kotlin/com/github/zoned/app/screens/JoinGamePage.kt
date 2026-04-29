@@ -31,10 +31,10 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import zoned.composeapp.generated.resources.Res
-import zoned.composeapp.generated.resources.check_24px
-import zoned.composeapp.generated.resources.location_on_24px
-import zoned.composeapp.generated.resources.notifications_active_24px
+import zoned.shared.generated.resources.Res
+import zoned.shared.generated.resources.check_24px
+import zoned.shared.generated.resources.location_on_24px
+import zoned.shared.generated.resources.notifications_active_24px
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)

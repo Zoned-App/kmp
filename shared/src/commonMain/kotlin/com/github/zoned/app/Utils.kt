@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
-import zoned.composeapp.generated.resources.Res
-import zoned.composeapp.generated.resources.arrow_back_24px
-import zoned.composeapp.generated.resources.logo_colored
+import zoned.shared.generated.resources.Res
+import zoned.shared.generated.resources.arrow_back_24px
+import zoned.shared.generated.resources.logo_colored
 
 @Composable
 fun Logo() {
