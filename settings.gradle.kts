@@ -28,4 +28,14 @@ dependencyResolutionManagement {
     }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "buf"
+            url = uri("https://buf.build/gen/maven")
+        }
+    }
+}
+
 include(":composeApp")
