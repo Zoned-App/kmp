@@ -19,9 +19,9 @@ import androidx.navigation3.runtime.NavKey
 import com.github.zoned.app.Back
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
-import zoned.composeapp.generated.resources.Res
-import zoned.composeapp.generated.resources.visibility_off_24px
-import zoned.composeapp.generated.resources.visibility_24px
+import zoned.shared.generated.resources.Res
+import zoned.shared.generated.resources.visibility_off_24px
+import zoned.shared.generated.resources.visibility_24px
 
 // ─────────────────────────────────────────────
 //  LOGIN PAGE
