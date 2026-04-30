@@ -29,12 +29,10 @@ fun AppTheme(darkMode: Boolean = isSystemInDarkTheme(), content: @Composable () 
     MaterialTheme(colorScheme = if (darkMode) darkTheme else lightTheme, typography = AppTypography, content = content)
 }
 
-expect val fontsCerts: Int
-
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
-    certificates = fontsCerts
+    certificates = R.array.com_google_android_gms_fonts_certs
 )
 
 val bodyFontFamily = FontFamily(
